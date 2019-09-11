@@ -17,6 +17,7 @@
 		D821DB1322FDAE86009B0045 /* GetCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = D821DB1222FDAE86009B0045 /* GetCurrency.swift */; };
 		D821DB1522FDD168009B0045 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = D821DB1422FDD168009B0045 /* Currency.swift */; };
 		D850B0F822DF0451003C415B /* BaluchonTabBar.temp_caseinsensitive_rename.swift in Sources */ = {isa = PBXBuildFile; fileRef = D850B0F722DF0451003C415B /* BaluchonTabBar.temp_caseinsensitive_rename.swift */; };
+		D89AD71B2328FAD700BF3E4F /* TestGit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89AD71A2328FAD700BF3E4F /* TestGit.swift */; };
 		D8A2E8542302DDC2007626A1 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A2E8532302DDC2007626A1 /* UIViewController+Alert.swift */; };
 		D8DF06C722DDB31900775355 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF06C622DDB31900775355 /* AppDelegate.swift */; };
 		D8DF06C922DDB31900775355 /* CurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF06C822DDB31900775355 /* CurrencyViewController.swift */; };
@@ -55,6 +56,7 @@
 		D821DB1222FDAE86009B0045 /* GetCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrency.swift; sourceTree = "<group>"; };
 		D821DB1422FDD168009B0045 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		D850B0F722DF0451003C415B /* BaluchonTabBar.temp_caseinsensitive_rename.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaluchonTabBar.temp_caseinsensitive_rename.swift; sourceTree = "<group>"; };
+		D89AD71A2328FAD700BF3E4F /* TestGit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGit.swift; sourceTree = "<group>"; };
 		D8A2E8532302DDC2007626A1 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		D8DF06C322DDB31900775355 /* Baluchon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Baluchon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8DF06C622DDB31900775355 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 			children = (
 				D821DB1422FDD168009B0045 /* Currency.swift */,
 				D821DB1222FDAE86009B0045 /* GetCurrency.swift */,
+				D89AD71A2328FAD700BF3E4F /* TestGit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				D821DB1322FDAE86009B0045 /* GetCurrency.swift in Sources */,
 				D8A2E8542302DDC2007626A1 /* UIViewController+Alert.swift in Sources */,
 				D813A9502322AF68002285C2 /* Translation.swift in Sources */,
+				D89AD71B2328FAD700BF3E4F /* TestGit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
