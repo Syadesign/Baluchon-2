@@ -61,7 +61,6 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: Methods
 
     @objc func convert() {
-        self.dollarView.backgroundColor = .blue
         guard let toConvert = self.currencyToConvertTextField.text else {return}
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         GetCurrency.getDailyCurrency(callback: ({ (success, currency) in

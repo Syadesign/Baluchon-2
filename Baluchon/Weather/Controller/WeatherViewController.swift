@@ -9,21 +9,21 @@
 import UIKit
 
 class WeatherViewController: UIViewController {
-
+    
     // MARK: View cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         setupRectView()
         
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         getWeather()
     }
-
+    
     // MARK: Variables
-
+    
     enum WeatherState {
         case sunny
         case cloudy
@@ -35,26 +35,27 @@ class WeatherViewController: UIViewController {
     
     let parisID = "6455259"
     let newYorkID = "5128638"
-
+    
     // MARK: Outlets
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var newYorkIconImage: UIImageView!
-    @IBOutlet weak var parisIconLabel: UIImageView!
+    @IBOutlet weak var parisIconImage: UIImageView!
     @IBOutlet var rectView: [UIView]!
     @IBOutlet weak var parisDegreesLabel: UILabel!
     
     @IBOutlet weak var newYorkDegreesLabel: UILabel!
     
     // MARK: Actions
-
+    
     // MARK: Methods
     func getWeather() {
         GetWeather.getDailyWeather(city: parisID) { (success, weather) in
             DispatchQueue.main.async {
                 if success, let weather = weather {
                     let temp = (round(weather.main.temp)).removeZerosFromEnd()
-                     self.parisDegreesLabel.text = temp + "°"
-                    print ("------------->\(weather)")
+                    self.parisDegreesLabel.text = temp + "°"
+                    self.parisIconImage.image = self.getImage(for: weather.weather[0])
+                    print ("-------------> Paris: \(weather)")
                 } else {
                     self.displayAlert("Le serveur n'a pas pu récuperer la météo, veuillez retenter d'ici quelques minutes")
                 }
@@ -66,7 +67,8 @@ class WeatherViewController: UIViewController {
                 if success, let weather = weather {
                     let temp = (round(weather.main.temp)).removeZerosFromEnd()
                     self.newYorkDegreesLabel.text = temp + "°"
-                    print ("------------->\(weather)")
+                    self.newYorkIconImage.image = self.getImage(for: weather.weather[0])
+                    print ("-------------> New-York: \(weather)")
                 } else {
                     self.displayAlert("Le serveur n'a pas pu récuperer la météo, veuillez retenter d'ici quelques minutes")
                 }
@@ -74,14 +76,35 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    
-    func setupRectView() {
+    private func setupRectView() {
         for rect in rectView {
-        let width = rect.bounds.width
-        rect.layer.cornerRadius = width / 20
+            let width = rect.bounds.width
+            rect.layer.cornerRadius = width / 20
         }
     }
     
+    private func getImage(for weatherElement: WeatherElement) -> UIImage {
+        
+        if let main = weatherElement.main {
+            
+            if main.contains("Clouds") {
+                return #imageLiteral(resourceName: "cloud")
+            } else if main.contains("Clear") {
+                return #imageLiteral(resourceName: "whiteSun")
+            } else if main.contains("Rain") {
+                return #imageLiteral(resourceName: "rain")
+            } else if main.contains("Thunderstorm") {
+                return #imageLiteral(resourceName: "storm")
+            } else if main.contains("Snow") {
+                return #imageLiteral(resourceName: "whiteSun")
+            } else if main.contains("Drizzle") {
+                return #imageLiteral(resourceName: "drizzle")
+            } else if main.contains("Mist") || main.contains("Fog") {
+                return #imageLiteral(resourceName: "whiteFog")
+            }
+        }
+        return #imageLiteral(resourceName: "whiteFog")
+    }
 }
 
 extension Double {

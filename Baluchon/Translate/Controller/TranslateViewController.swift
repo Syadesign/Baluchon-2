@@ -2,7 +2,7 @@
 //  SecondViewController.swift
 //  Baluchon
 //
-//  Created by Michael Martinez on 16/07/2019.
+//  Created by Samahir Adi on 16/07/2019.
 //  Copyright © 2019 Samahir Adi. All rights reserved.
 //
 
@@ -16,14 +16,22 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         setupTextView()
         setupWhiteView()
         
-//        textTranslated.clipsToBounds = true
-//        textToTranslate.clipsToBounds = true
         textToTranslate.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        // Add gesture to the trannslate button
+        // Add gesture to the translate button
         let translateGesture = UITapGestureRecognizer(target: self, action: #selector(translate))
-        translateGesture.delegate = self
         self.roundedView.addGestureRecognizer(translateGesture)
+        translateGesture.delegate = self
         translateGesture.isEnabled = true
+        
+        // Add gesture to the clear button
+        let clearGesture = UITapGestureRecognizer(target: self, action: #selector(clearText))
+        self.clearButton.addGestureRecognizer(clearGesture)
+        clearGesture.delegate = self
+        clearGesture.isEnabled = true
+        
+        // TextViewDelegate
+        self.textToTranslate.delegate = self
+        self.textTranslated.delegate = self
         
         // Manage Keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -34,6 +42,8 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidAppear(animated)
     }
     
+    @IBOutlet weak var placeHolderEnglish: UILabel!
+    @IBOutlet weak var placeHolderFrench: UILabel!
     @IBOutlet weak var greyViewTopConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var roundedView: UIView!
@@ -45,6 +55,8 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var whiteView: UIView!
     
     @IBOutlet weak var greyView: UIView!
+    
+    @IBOutlet weak var clearButton: UIImageView!
     
     func setupRoundedView() {
         let width = self.roundedView.bounds.width
@@ -74,7 +86,6 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: Methods
     
     @objc func translate() {
-        self.roundedView.backgroundColor = .orange
         guard let text = textToTranslate.text else {return}
         if text.isEmpty {
             displayAlert("Vous devez entrer un texte valide.")
@@ -98,6 +109,13 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }))
+    }
+    
+    @objc func clearText() {
+        textToTranslate.text = ""
+        textTranslated.text = ""
+        placeHolderFrench.isHidden = false
+        placeHolderEnglish.isHidden = false
     }
     
     func setupTextView() {
@@ -127,12 +145,40 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
 extension TranslateViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        placeHolderFrench.isHidden = true
+        placeHolderEnglish.isHidden = true
+        print ("text did begin editing")
     }
     
     func textViewDidChange(_ textView: UITextView) {
         if textToTranslate.text.isEmpty == true {
             textTranslated.text = ""
         }
+        placeHolderFrench.isHidden = true
+        placeHolderEnglish.isHidden = true
+        print ("text did change")
+    }
+    
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        print ("text should end editing")
+        if textView.text.isEmpty == true {
+        placeHolderFrench.isHidden = false
+        placeHolderEnglish.isHidden = false
+        }
+        return true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty == true {
+            placeHolderFrench.isHidden = false
+            placeHolderEnglish.isHidden = false
+        }
+        print ("text did end editing")
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        print ("text should begin editing")
+        return true
     }
 
 }

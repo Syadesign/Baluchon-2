@@ -19,5 +19,5 @@ struct Main: Codable {
 
 struct WeatherElement: Codable {
     let id: Int
-    let main, weatherDescription: String?
+    let main, weatherDescription, icon: String?
 }
