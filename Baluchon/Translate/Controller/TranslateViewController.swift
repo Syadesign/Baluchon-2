@@ -28,7 +28,7 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         self.clearButton.addGestureRecognizer(clearGesture)
         clearGesture.delegate = self
         clearGesture.isEnabled = true
-        
+        clearButton.isHidden = true
         // TextViewDelegate
         self.textToTranslate.delegate = self
         self.textTranslated.delegate = self
@@ -145,18 +145,22 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
 extension TranslateViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        placeHolderFrench.isHidden = true
-        placeHolderEnglish.isHidden = true
         print ("text did begin editing")
     }
     
     func textViewDidChange(_ textView: UITextView) {
         if textToTranslate.text.isEmpty == true {
             textTranslated.text = ""
+            clearButton.isHidden = true
+            placeHolderFrench.isHidden = false
+            placeHolderEnglish.isHidden = false
+            print ("text is Empty")
+        } else {
+             clearButton.isHidden = false
+            placeHolderFrench.isHidden = true
+            placeHolderEnglish.isHidden = true
+            print ("text did change")
         }
-        placeHolderFrench.isHidden = true
-        placeHolderEnglish.isHidden = true
-        print ("text did change")
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -172,6 +176,7 @@ extension TranslateViewController: UITextViewDelegate {
         if textView.text.isEmpty == true {
             placeHolderFrench.isHidden = false
             placeHolderEnglish.isHidden = false
+            clearButton.isHidden = true
         }
         print ("text did end editing")
     }
