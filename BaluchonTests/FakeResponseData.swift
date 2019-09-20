@@ -17,7 +17,25 @@ class FakeResponseData {
         return data
     }
     
+    var currencyCorrectData: Data {
+        let bundle = (Bundle(for: FakeResponseData.self))
+        let url = bundle.url(forResource: "Currency", withExtension: "json")
+        let data = try! Data(contentsOf: url!)
+        return data
+    }
+    
+    var weatherCorrectData: Data {
+        let bundle = (Bundle(for: FakeResponseData.self))
+        let url = bundle.url(forResource: "Weather", withExtension: "json")
+        let data = try! Data(contentsOf: url!)
+        return data
+    }
+    
+    
+    
     let translationIncorrectData = "erreur".data(using: .utf8)!
+    let currencyIncorrectData = "erreur".data(using: .utf8)!
+    let weatherIncorrectData = "erreur".data(using: .utf8)!
     
     // MARK: Response
     static let responseOK = HTTPURLResponse(url: URL(string: "https://www.google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)!
@@ -26,5 +44,14 @@ class FakeResponseData {
     
     // MARK: Error
     class TranslationError: Error {}
-    let error = TranslationError()
+    let translationError = TranslationError()
+    
+    class CurrencyError: Error {}
+    let currencyError = CurrencyError()
+    
+    class WeatherError: Error {}
+    let weatherError = WeatherError()
+
 }
+
+

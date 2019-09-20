@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1B73170D9C3C11DB3D1CB5AC /* Pods_BaluchonTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1789FB602809BD8AC3C64 /* Pods_BaluchonTests.framework */; };
+		D80A967F23352462004A3036 /* Currency.json in Resources */ = {isa = PBXBuildFile; fileRef = D80A967E23352462004A3036 /* Currency.json */; };
+		D80A9681233524B3004A3036 /* Weather.json in Resources */ = {isa = PBXBuildFile; fileRef = D80A9680233524B3004A3036 /* Weather.json */; };
 		D813A9492322465B002285C2 /* Translation.json in Resources */ = {isa = PBXBuildFile; fileRef = D813A9482322465B002285C2 /* Translation.json */; };
 		D813A94B23224758002285C2 /* FakeResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D813A94A23224758002285C2 /* FakeResponseData.swift */; };
 		D813A9502322AF68002285C2 /* Translation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D813A94E2322AF68002285C2 /* Translation.swift */; };
@@ -47,6 +49,8 @@
 		66C560ADB2A94475E709EA14 /* Pods-BaluchonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BaluchonTests.release.xcconfig"; path = "Target Support Files/Pods-BaluchonTests/Pods-BaluchonTests.release.xcconfig"; sourceTree = "<group>"; };
 		6926CDAEFD6E2E48CC8F4018 /* Pods-Baluchon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baluchon.debug.xcconfig"; path = "Target Support Files/Pods-Baluchon/Pods-Baluchon.debug.xcconfig"; sourceTree = "<group>"; };
 		D6DE40C19E50A08DC506243B /* Pods-BaluchonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BaluchonTests.debug.xcconfig"; path = "Target Support Files/Pods-BaluchonTests/Pods-BaluchonTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D80A967E23352462004A3036 /* Currency.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Currency.json; sourceTree = "<group>"; };
+		D80A9680233524B3004A3036 /* Weather.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Weather.json; sourceTree = "<group>"; };
 		D813A9482322465B002285C2 /* Translation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Translation.json; sourceTree = "<group>"; };
 		D813A94A23224758002285C2 /* FakeResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeResponseData.swift; sourceTree = "<group>"; };
 		D813A94E2322AF68002285C2 /* Translation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Translation.swift; sourceTree = "<group>"; };
@@ -234,6 +238,8 @@
 				D8DF06DF22DDB31A00775355 /* Info.plist */,
 				D813A94A23224758002285C2 /* FakeResponseData.swift */,
 				D813A9482322465B002285C2 /* Translation.json */,
+				D80A967E23352462004A3036 /* Currency.json */,
+				D80A9680233524B3004A3036 /* Weather.json */,
 			);
 			path = BaluchonTests;
 			sourceTree = "<group>";
@@ -341,6 +347,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D80A967F23352462004A3036 /* Currency.json in Resources */,
+				D80A9681233524B3004A3036 /* Weather.json in Resources */,
 				D813A9492322465B002285C2 /* Translation.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
