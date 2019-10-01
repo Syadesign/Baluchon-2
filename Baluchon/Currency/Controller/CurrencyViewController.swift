@@ -2,7 +2,7 @@
 //  FirstViewController.swift
 //  Baluchon
 //
-//  Created by Michael Martinez on 16/07/2019.
+//  Created by Samahir Adi on 16/07/2019.
 //  Copyright © 2019 Samahir Adi. All rights reserved.
 //
 
@@ -63,7 +63,7 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
     @objc func convert() {
         guard let toConvert = self.currencyToConvertTextField.text else {return}
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        GetCurrency.getDailyCurrency(callback: ({ (success, currency) in
+        CurrencyService.shared.getDailyCurrency(callback: ({ (success, currency) in
             DispatchQueue.main.async {
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             if success, let currency = currency {
@@ -90,6 +90,7 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func setupTextField() {
         let textFieldArray = [currencyToConvertTextField, currencyConvertedTextField]
+        currencyToConvertTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         let width = self.currencyToConvertTextField.bounds.width
         for textField in textFieldArray {
             textField!.layer.cornerRadius = width / 20
@@ -124,16 +125,16 @@ extension CurrencyViewController: UITextFieldDelegate {
         return numberFormatter.number(from: str)?.intValue != nil
     }
     
-}
-
-extension String {
-    
-    func replace(string: String, replacement: String) -> String {
-        return self.replacingOccurrences(of: string, with: replacement, options: NSString.CompareOptions.literal, range: nil)
+    func didChange<Value>(_ changeKind: NSKeyValueChange, valuesAt indexes: IndexSet, for keyPath: __owned KeyPath<CurrencyViewController, Value>) {
+        if currencyToConvertTextField.text?.isEmpty == true {
+            currencyConvertedTextField.text = ""
+        }
     }
     
-    func removeWhitespace() -> String {
-        return self.replace(string: " ", replacement: "")
+    @objc func textFieldDidChange() {
+        if currencyToConvertTextField.text?.isEmpty == true {
+            currencyConvertedTextField.text = ""
+        }
     }
     
 }

@@ -2,7 +2,7 @@
 //  WeatherViewController.swift
 //  Baluchon
 //
-//  Created by Michael Martinez on 16/07/2019.
+//  Created by Samahir Adi on 16/07/2019.
 //  Copyright © 2019 Samahir Adi. All rights reserved.
 //
 
@@ -24,15 +24,6 @@ class WeatherViewController: UIViewController {
     
     // MARK: Variables
     
-    enum WeatherState {
-        case sunny
-        case cloudy
-        case sunnyCloudy
-        case rainy
-        case foggy
-        case stormy
-    }
-    
     let parisID = "6455259"
     let newYorkID = "5128638"
     
@@ -49,7 +40,7 @@ class WeatherViewController: UIViewController {
     
     // MARK: Methods
     func getWeather() {
-        GetWeather.getDailyWeather(city: parisID) { (success, weather) in
+        WeatherService.shared.getDailyWeather(city: parisID) { (success, weather) in
             DispatchQueue.main.async {
                 if success, let weather = weather {
                     let temp = (round(weather.main.temp)).removeZerosFromEnd()
@@ -62,7 +53,7 @@ class WeatherViewController: UIViewController {
             }
         }
         
-        GetWeather.getDailyWeather(city: newYorkID) { (success, weather) in
+        WeatherService.shared.getDailyWeather(city: newYorkID) { (success, weather) in
             DispatchQueue.main.async {
                 if success, let weather = weather {
                     let temp = (round(weather.main.temp)).removeZerosFromEnd()
@@ -104,15 +95,5 @@ class WeatherViewController: UIViewController {
             }
         }
         return #imageLiteral(resourceName: "whiteFog")
-    }
-}
-
-extension Double {
-    func removeZerosFromEnd() -> String {
-        let formatter = NumberFormatter()
-        let number = NSNumber(value: self)
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 16 //maximum digits in Double after dot (maximum precision)
-        return String(formatter.string(from: number) ?? "")
     }
 }

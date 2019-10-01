@@ -2,7 +2,7 @@
 //  Translation.swift
 //  Baluchon
 //
-//  Created by Michael Martinez on 02/09/2019.
+//  Created by Samahir Adi on 02/09/2019.
 //  Copyright © 2019 Samahir Adi. All rights reserved.
 //
 

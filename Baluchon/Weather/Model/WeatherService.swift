@@ -8,18 +8,22 @@
 
 import Foundation
 
-class GetWeather {
+class WeatherService {
     
-    private static let weatherUrl = URL(string: "https://api.openweathermap.org/data/2.5/weather")!
+    static var shared = WeatherService()
+    private init() {}
     
-    static func getDailyWeather(city: String, callback: @ escaping (Bool, Weather?) -> Void) {
+    private let weatherUrl = URL(string: "https://api.openweathermap.org/data/2.5/weather")!
+    
+    let session = URLSession(configuration: .default)
+    
+    /// comments
+    func getDailyWeather(city: String, callback: @ escaping (Bool, Weather?) -> Void) {
         guard let request = createWeatherRequest(city: city) else {
             print ("request = nil")
             callback(false, nil)
             return
         }
-        
-        let session = URLSession(configuration: .default)
         
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
@@ -45,7 +49,7 @@ class GetWeather {
         task.resume()
     }
     
-    private static func createWeatherRequest(city: String) -> URLRequest? {
+    private func createWeatherRequest(city: String) -> URLRequest? {
         var component = URLComponents(url: weatherUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [
             URLQueryItem (name: "appid", value: "6bf8e9a72c8f83b5ce3396195b1df5da"),

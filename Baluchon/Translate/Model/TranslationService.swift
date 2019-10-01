@@ -2,28 +2,31 @@
 //  GetTranslation.swift
 //  Baluchon
 //
-//  Created by Michael Martinez on 02/09/2019.
+//  Created by Samahir Adi on 02/09/2019.
 //  Copyright © 2019 Samahir Adi. All rights reserved.
 //
 
 import Foundation
 
-struct GetTranslation {
+class TranslationService {
+    
+    static var shared = TranslationService()
+    private init() {}
     
     static var text: String {
         return ""
     }
     
-    private static let translationUrl = URL(string: "https://translation.googleapis.com/language/translate/v2")!
+    private let translationUrl = URL(string: "https://translation.googleapis.com/language/translate/v2")!
     
-    static func getEnglishTranslation(text: String, callback: @ escaping (Bool, _ translatedText: String?) -> Void) {
+    let session = URLSession(configuration: .default)
+    
+    func getEnglishTranslation(text: String, callback: @ escaping (Bool, _ translatedText: String?) -> Void) {
         guard let request = createTranslationRequest(textToTranslate: text) else {
             print ("request = nil")
             callback(false, nil)
             return
         }
-        
-        let session = URLSession(configuration: .default)
         
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
@@ -49,7 +52,7 @@ struct GetTranslation {
         task.resume()
     }
     
-    private static func createTranslationRequest(textToTranslate: String) -> URLRequest? {
+    private func createTranslationRequest(textToTranslate: String) -> URLRequest? {
         var component = URLComponents(url: translationUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [
             URLQueryItem (name: "key", value: "AIzaSyDM04XaaZrYiz-vGhxTHjGMo1HBgo2rNO0"),

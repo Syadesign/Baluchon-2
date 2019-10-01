@@ -90,22 +90,22 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         if text.isEmpty {
             displayAlert("Vous devez entrer un texte valide.")
         }
-        GetTranslation.getEnglishTranslation(text: text, callback: ({ (success, translatedText) in
+        TranslationService.shared.getEnglishTranslation(text: text, callback: ({ (success, translatedText) in
             DispatchQueue.main.async {
-            if success, let translatedText = translatedText {
-                print ("\(text)")
+                if success, let translatedText = translatedText {
+                    print ("\(text)")
                     var text: String {
                         get {
-                        var textToTrans = GetTranslation.text
-                        textToTrans = self.textToTranslate.text
-                        return textToTrans
+                            var textToTrans = TranslationService.text
+                            textToTrans = self.textToTranslate.text
+                            return textToTrans
                         }
                     }
                     self.textTranslated.text = translatedText
                     print ("translation :\(translatedText)")
-                
-            } else {
-                self.displayAlert("Le serveur n'a pas pu récuperer la traduction, veuillez retenter d'ici quelques minutes")
+                    
+                } else {
+                    self.displayAlert("Le serveur n'a pas pu récuperer la traduction, veuillez retenter d'ici quelques minutes")
                 }
             }
         }))
@@ -146,6 +146,7 @@ extension TranslateViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         print ("text did begin editing")
+        textView.contentInset = .zero
     }
     
     func textViewDidChange(_ textView: UITextView) {
@@ -156,7 +157,7 @@ extension TranslateViewController: UITextViewDelegate {
             placeHolderEnglish.isHidden = false
             print ("text is Empty")
         } else {
-             clearButton.isHidden = false
+            clearButton.isHidden = false
             placeHolderFrench.isHidden = true
             placeHolderEnglish.isHidden = true
             print ("text did change")
@@ -166,8 +167,8 @@ extension TranslateViewController: UITextViewDelegate {
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         print ("text should end editing")
         if textView.text.isEmpty == true {
-        placeHolderFrench.isHidden = false
-        placeHolderEnglish.isHidden = false
+            placeHolderFrench.isHidden = false
+            placeHolderEnglish.isHidden = false
         }
         return true
     }
@@ -181,9 +182,4 @@ extension TranslateViewController: UITextViewDelegate {
         print ("text did end editing")
     }
     
-    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        print ("text should begin editing")
-        return true
-    }
-
 }

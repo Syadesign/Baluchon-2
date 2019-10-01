@@ -9,21 +9,30 @@
 import Foundation
 
 // MARK: - Welcome
-struct GetCurrency {
+class CurrencyService {
     
-    private static let currencyUrl = URL(string: "http://data.fixer.io/api/latest?access_key=a765f89d01bae9245018f78706a1a8de")!
+    static var shared = CurrencyService()
+    private init() {}
     
-    static func getDailyCurrency(callback: @ escaping (Bool, Currency?) -> Void) {
+    private let currencyUrl = URL(string: "http://data.fixer.io/api/latest?access_key=a765f89d01bae9245018f78706a1a8de")!
+    
+    private var session = URLSession(configuration: .default)
+    private var task: URLSessionDataTask?
+    
+    init(session: URLSession) {
+        self.session = session
+    }
+    
+    func getDailyCurrency(callback: @ escaping (Bool, Currency?) -> Void) {
         guard let request = createCurrencyRequest() else {
             print ("request = nil")
             callback(false, nil)
             return
         }
-        
-        let session = URLSession(configuration: .default)
-        let task = session.dataTask(with: request) { (data, response, error) in
+       
+        task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
-                print ("request error \(error!.localizedDescription)")
+//                print ("request error \(error!.localizedDescription)")
                 callback(false, nil)
                 return
             }
@@ -41,10 +50,10 @@ struct GetCurrency {
                 callback(false, nil)
             }
         }
-        task.resume()
+        task?.resume()
     }
     
-    private static func createCurrencyRequest() -> URLRequest? {
+    private func createCurrencyRequest() -> URLRequest? {
         var component = URLComponents(url: currencyUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [
             URLQueryItem (name: "access_key", value: "a765f89d01bae9245018f78706a1a8de"),

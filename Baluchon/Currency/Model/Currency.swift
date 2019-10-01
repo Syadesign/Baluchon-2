@@ -2,7 +2,7 @@
 //  Currency.swift
 //  Baluchon
 //
-//  Created by Michael Martinez on 09/08/2019.
+//  Created by Samahir Adi on 09/08/2019.
 //  Copyright © 2019 Samahir Adi. All rights reserved.
 //
 
