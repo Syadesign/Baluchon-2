@@ -15,7 +15,11 @@ class WeatherService {
     
     private let weatherUrl = URL(string: "https://api.openweathermap.org/data/2.5/weather")!
     
-    let session = URLSession(configuration: .default)
+    private var session = URLSession(configuration: .default)
+    
+    init(session: URLSession) {
+        self.session = session
+    }
     
     /// comments
     func getDailyWeather(city: String, callback: @ escaping (Bool, Weather?) -> Void) {
@@ -27,7 +31,7 @@ class WeatherService {
         
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
-                print ("request error \(error!.localizedDescription)")
+//                print ("request error \(error!.localizedDescription)")
                 callback(false, nil)
                 return
             }

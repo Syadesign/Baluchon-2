@@ -19,9 +19,13 @@ class TranslationService {
     
     private let translationUrl = URL(string: "https://translation.googleapis.com/language/translate/v2")!
     
-    let session = URLSession(configuration: .default)
+    private var session = URLSession(configuration: .default)
     
-    func getEnglishTranslation(text: String, callback: @ escaping (Bool, _ translatedText: String?) -> Void) {
+    init(session: URLSession) {
+        self.session = session
+    }
+    
+    func getTranslation(text: String, callback: @ escaping (Bool, _ translatedText: String?) -> Void) {
         guard let request = createTranslationRequest(textToTranslate: text) else {
             print ("request = nil")
             callback(false, nil)
@@ -30,7 +34,7 @@ class TranslationService {
         
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
-                print ("request error \(error!.localizedDescription)")
+//                print ("request error \(error!.localizedDescription)")
                 callback(false, nil)
                 return
             }

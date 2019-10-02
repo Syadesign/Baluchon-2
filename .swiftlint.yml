@@ -4,5 +4,5 @@ disabled_rules: # rule identifiers to exclude from running
   - identifier_name
 
 line_length:
-  warning: 160
+  warning: 180
   error: 250

@@ -90,7 +90,7 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         if text.isEmpty {
             displayAlert("Vous devez entrer un texte valide.")
         }
-        TranslationService.shared.getEnglishTranslation(text: text, callback: ({ (success, translatedText) in
+        TranslationService.shared.getTranslation(text: text, callback: ({ (success, translatedText) in
             DispatchQueue.main.async {
                 if success, let translatedText = translatedText {
                     print ("\(text)")
