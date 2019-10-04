@@ -17,7 +17,10 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var whiteView: UIView!
     @IBOutlet weak var greyView: UIView!
     
+    @IBOutlet weak var currencyStackView: UIStackView!
     @IBOutlet weak var greyViewTopConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var stackViewTopConstraint: NSLayoutConstraint!
     // MARK: ViewCycle
 
     override func viewDidLoad() {
@@ -27,7 +30,7 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
         setupWhiteView()
         currencyConvertedTextField.delegate = self
         currencyToConvertTextField.delegate = self
-    
+        
         // Add gesture to the dollar button
         let convertDollars = UITapGestureRecognizer(target: self, action: #selector(convert))
         convertDollars.delegate = self
@@ -37,7 +40,15 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
         // Manage Keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        self.stackViewTopConstraintCache = self.stackViewTopConstraint
+        if let stackViewTopConstraintCache = self.stackViewTopConstraintCache  {
+            self.currencyStackView.removeConstraint(stackViewTopConstraintCache)
+        }
     }
+    
+    // MARK: Variables
+    private var stackViewTopConstraintCache: NSLayoutConstraint? = nil
+    
     // MARK: Actions
     @IBAction func dismissKeyboard(_ sender: Any) {
         currencyToConvertTextField.resignFirstResponder()
@@ -50,7 +61,7 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
             self.greyViewTopConstraint.constant = 0
         }
     }
-
+    
     @objc private func keyboardWillHide(notification: Notification) {
          guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {return}
             UIView.animate(withDuration: duration) {
