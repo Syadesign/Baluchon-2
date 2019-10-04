@@ -2,7 +2,7 @@
 //  GetWeather.swift
 //  Baluchon
 //
-//  Created by Michael Martinez on 06/09/2019.
+//  Created by Samahir Adi on 06/09/2019.
 //  Copyright © 2019 Samahir Adi. All rights reserved.
 //
 
@@ -10,12 +10,11 @@ import Foundation
 
 class WeatherService {
     
-    static var shared = WeatherService()
-    private init() {}
+    static let shared = WeatherService(session: URLSession(configuration: .default))
     
     private let weatherUrl = URL(string: "https://api.openweathermap.org/data/2.5/weather")!
     
-    private var session = URLSession(configuration: .default)
+    private var session: URLSession
     
     init(session: URLSession) {
         self.session = session
@@ -23,21 +22,16 @@ class WeatherService {
     
     /// comments
     func getDailyWeather(city: String, callback: @ escaping (Bool, Weather?) -> Void) {
-        guard let request = createWeatherRequest(city: city) else {
-            print ("request = nil")
-            callback(false, nil)
-            return
-        }
+       
+        let request = createWeatherRequest(city: city)
         
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
-//                print ("request error \(error!.localizedDescription)")
                 callback(false, nil)
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                print ("http code response error")
                 callback(false, nil)
                 return
             }
@@ -46,14 +40,13 @@ class WeatherService {
                 let weather = try JSONDecoder().decode(Weather.self, from: data)
                 callback(true, weather)
             } catch {
-                print ("error while parsing response \(error)")
                 callback(false, nil)
             }
         }
         task.resume()
     }
     
-    private func createWeatherRequest(city: String) -> URLRequest? {
+    private func createWeatherRequest(city: String) -> URLRequest {
         var component = URLComponents(url: weatherUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [
             URLQueryItem (name: "appid", value: "6bf8e9a72c8f83b5ce3396195b1df5da"),
@@ -61,7 +54,8 @@ class WeatherService {
             URLQueryItem (name: "lang", value: "fr"),
             URLQueryItem (name: "units", value: "metric")
         ]
-        guard let urlComponent = component, let url = urlComponent.url else {return nil}
+        // if component is nil, url = weatherUrl
+        let url = component?.url ?? weatherUrl
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         return request

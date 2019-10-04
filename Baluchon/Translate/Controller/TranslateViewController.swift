@@ -94,13 +94,6 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
             DispatchQueue.main.async {
                 if success, let translatedText = translatedText {
                     print ("\(text)")
-                    var text: String {
-                        get {
-                            var textToTrans = TranslationService.text
-                            textToTrans = self.textToTranslate.text
-                            return textToTrans
-                        }
-                    }
                     self.textTranslated.text = translatedText
                     print ("translation :\(translatedText)")
                     
