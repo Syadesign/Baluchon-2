@@ -10,16 +10,28 @@ import UIKit
 
 class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    // MARK: - Outlets
+    @IBOutlet weak var placeHolderToTranslate: UILabel!
+    @IBOutlet weak var placeHolderTranslated: UILabel!
+    @IBOutlet weak var greyViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var translateButtonView: UIView!
+    @IBOutlet weak var textToTranslate: UITextView!
+    @IBOutlet weak var textTranslated: UITextView!
+    @IBOutlet weak var whiteView: UIView!
+    @IBOutlet weak var greyView: UIView!
+    @IBOutlet weak var clearButton: UIImageView!
+    
+    // MARK: - ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupRoundedView()
         setupTextView()
         setupWhiteView()
-        
         textToTranslate.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
         // Add gesture to the translate button
         let translateGesture = UITapGestureRecognizer(target: self, action: #selector(translate))
-        self.roundedView.addGestureRecognizer(translateGesture)
+        self.translateButtonView.addGestureRecognizer(translateGesture)
         translateGesture.delegate = self
         translateGesture.isEnabled = true
         
@@ -38,33 +50,29 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    // MARK: - Variables
+    let french = "fr"
+    let english = "en"
+    
+    enum State: String {
+        case fromFrench
+        case fromEnglish
     }
     
-    @IBOutlet weak var placeHolderEnglish: UILabel!
-    @IBOutlet weak var placeHolderFrench: UILabel!
-    @IBOutlet weak var greyViewTopConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var roundedView: UIView!
-    
-    @IBOutlet weak var textToTranslate: UITextView!
-    
-    @IBOutlet weak var textTranslated: UITextView!
-    
-    @IBOutlet weak var whiteView: UIView!
-    
-    @IBOutlet weak var greyView: UIView!
-    
-    @IBOutlet weak var clearButton: UIImageView!
-    
-    func setupRoundedView() {
-        let width = self.roundedView.bounds.width
-        self.roundedView.layer.cornerRadius = width / 2
-        self.roundedView.clipsToBounds = true
+    var currentState: State = .fromFrench {
+        didSet {
+            switch currentState {
+            case .fromFrench:
+                placeHolderToTranslate.text = "French"
+                placeHolderTranslated.text = "English"
+            case .fromEnglish:
+                placeHolderToTranslate.text = "English"
+                placeHolderTranslated.text = "French"
+            }
+        }
     }
     
-    // MARK: Manage Keyboard
+    // MARK: - Manage Keyboard
     @objc private func keyboardWillShow(notification: Notification) {
         guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {return}
         UIView.animate(withDuration: duration) {
@@ -83,34 +91,48 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         textToTranslate.resignFirstResponder()
     }
     
-    // MARK: Methods
+    @IBAction func switchLanguage(_ sender: Any) {
+        if self.currentState == .fromFrench {
+            self.currentState = .fromEnglish
+        } else if self.currentState == .fromEnglish {
+           self.currentState = .fromFrench
+        }
+    }
     
-    @objc func translate() {
+    // MARK: - Methods
+    func translateFromLanguage(from: String, to: String) {
+        self.currentState = .fromFrench
         guard let text = textToTranslate.text else {return}
         if text.isEmpty {
-            displayAlert("Vous devez entrer un texte valide.")
+            displayAlert("Please enter a valid text")
         }
-        TranslationService.shared.getTranslation(text: text, callback: ({ (success, translatedText) in
+        TranslationService.shared.getTranslation(text: text, from: from, to: to, callback: ({ (success, translatedText) in
             DispatchQueue.main.async {
                 if success, let translatedText = translatedText {
-                    print ("\(text)")
                     self.textTranslated.text = translatedText
-                    print ("translation :\(translatedText)")
-                    
                 } else {
-                    self.displayAlert("Le serveur n'a pas pu récuperer la traduction, veuillez retenter d'ici quelques minutes")
+                    self.displayAlert("Please retry after few minutes")
                 }
             }
         }))
     }
     
+    @objc func translate() {
+        if currentState == .fromFrench {
+            translateFromLanguage(from: french, to: english)
+        } else if currentState == .fromEnglish {
+           translateFromLanguage(from: english, to: french)
+        }
+    }
+    
     @objc func clearText() {
         textToTranslate.text = ""
         textTranslated.text = ""
-        placeHolderFrench.isHidden = false
-        placeHolderEnglish.isHidden = false
+        placeHolderTranslated.isHidden = false
+        placeHolderToTranslate.isHidden = false
     }
     
+    // Put rounded corners to the textViews
     func setupTextView() {
         let textViewArray = [textTranslated, textToTranslate]
         let width = self.textToTranslate.bounds.width
@@ -123,22 +145,25 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    // WhiteView rounded corners
     func setupWhiteView() {
         let width = self.whiteView.frame.width
         self.whiteView.layer.cornerRadius = width/15
         self.greyView.layer.cornerRadius = width/15
     }
     
-    func getText() -> String {
-        return textToTranslate.text
+    // Make the button view circle
+    func setupRoundedView() {
+        let width = self.translateButtonView.bounds.width
+        self.translateButtonView.layer.cornerRadius = width / 2
+        self.translateButtonView.clipsToBounds = true
     }
     
 }
 
+// MARK: - TextView Delegate
 extension TranslateViewController: UITextViewDelegate {
-    
     func textViewDidBeginEditing(_ textView: UITextView) {
-        print ("text did begin editing")
         textView.contentInset = .zero
     }
     
@@ -146,33 +171,28 @@ extension TranslateViewController: UITextViewDelegate {
         if textToTranslate.text.isEmpty == true {
             textTranslated.text = ""
             clearButton.isHidden = true
-            placeHolderFrench.isHidden = false
-            placeHolderEnglish.isHidden = false
-            print ("text is Empty")
+            placeHolderTranslated.isHidden = false
+            placeHolderToTranslate.isHidden = false
         } else {
             clearButton.isHidden = false
-            placeHolderFrench.isHidden = true
-            placeHolderEnglish.isHidden = true
-            print ("text did change")
+            placeHolderTranslated.isHidden = true
+            placeHolderToTranslate.isHidden = true
         }
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-        print ("text should end editing")
         if textView.text.isEmpty == true {
-            placeHolderFrench.isHidden = false
-            placeHolderEnglish.isHidden = false
+            placeHolderTranslated.isHidden = false
+            placeHolderToTranslate.isHidden = false
         }
         return true
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty == true {
-            placeHolderFrench.isHidden = false
-            placeHolderEnglish.isHidden = false
+            placeHolderTranslated.isHidden = false
+            placeHolderToTranslate.isHidden = false
             clearButton.isHidden = true
         }
-        print ("text did end editing")
     }
-    
 }

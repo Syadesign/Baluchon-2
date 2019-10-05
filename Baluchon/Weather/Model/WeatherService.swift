@@ -10,32 +10,37 @@ import Foundation
 
 class WeatherService {
     
+    // MARK: - Variables
     static let shared = WeatherService(session: URLSession(configuration: .default))
     
     private let weatherUrl = URL(string: "https://api.openweathermap.org/data/2.5/weather")!
     
     private var session: URLSession
     
+    // MARK: - Init
     init(session: URLSession) {
         self.session = session
     }
     
-    /// comments
-    func getDailyWeather(city: String, callback: @ escaping (Bool, Weather?) -> Void) {
+    // MARK: - Methods
+    // Get the current weather
+    func getWeather(city: String, callback: @ escaping (Bool, Weather?) -> Void) {
        
         let request = createWeatherRequest(city: city)
         
         let task = session.dataTask(with: request) { (data, response, error) in
+            // Check the data
             guard let data = data, error == nil else {
                 callback(false, nil)
                 return
             }
-            
+            // Check the response code
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
                 callback(false, nil)
                 return
             }
-            print ("\(response)")
+            
+            // Parse json
             do {
                 let weather = try JSONDecoder().decode(Weather.self, from: data)
                 callback(true, weather)
@@ -45,7 +50,7 @@ class WeatherService {
         }
         task.resume()
     }
-    
+    // Create a request to get the current weather in a city
     private func createWeatherRequest(city: String) -> URLRequest {
         var component = URLComponents(url: weatherUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [

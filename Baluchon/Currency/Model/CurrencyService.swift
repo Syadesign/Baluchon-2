@@ -8,32 +8,37 @@
 
 import Foundation
 
-// MARK: - Welcome
 class CurrencyService {
     
-    static var shared = CurrencyService(session: URLSession(configuration: .default))
+    // MARK: - Variables
+    static let shared = CurrencyService(session: URLSession(configuration: .default))
     
     private let currencyUrl = URL(string: "http://data.fixer.io/api/latest?access_key=a765f89d01bae9245018f78706a1a8de")!
     
     private var session: URLSession
     private var task: URLSessionDataTask?
     
+    // MARK: - Init
     init(session: URLSession) {
         self.session = session
     }
     
-    func getDailyCurrency(callback: @ escaping (Bool, Currency?) -> Void) {
+    // MARK: - Methods
+    // Get the current USD currency
+    func getCurrency(callback: @ escaping (Bool, Currency?) -> Void) {
         let request = createCurrencyRequest()
         task = session.dataTask(with: request) { (data, response, error) in
+            // Check the data
             guard let data = data, error == nil else {
                 callback(false, nil)
                 return
             }
+            // Check the response code
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
                 callback(false, nil)
                 return
             }
-        
+            // Parse json
             do {
                 let currency = try JSONDecoder().decode(Currency.self, from: data)
                 callback(true, currency)
@@ -44,6 +49,7 @@ class CurrencyService {
         task?.resume()
     }
     
+    // Create an UrlRequest to get USD currency in a euros base
     private func createCurrencyRequest() -> URLRequest {
         var component = URLComponents(url: currencyUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [

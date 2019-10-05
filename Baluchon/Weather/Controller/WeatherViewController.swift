@@ -10,24 +10,7 @@ import UIKit
 
 class WeatherViewController: UIViewController {
     
-    // MARK: View cycles
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupRectView()
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        getWeather()
-    }
-    
-    // MARK: Variables
-    
-    let parisID = "6455259"
-    let newYorkID = "5128638"
-    
-    // MARK: Outlets
+    // MARK: - Outlets
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var newYorkIconImage: UIImageView!
     @IBOutlet weak var parisIconImage: UIImageView!
@@ -36,37 +19,52 @@ class WeatherViewController: UIViewController {
     
     @IBOutlet weak var newYorkDegreesLabel: UILabel!
     
-    // MARK: Actions
+    // MARK: - ViewCycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupRectView()
+    }
     
-    // MARK: Methods
-    func getWeather() {
-        WeatherService.shared.getDailyWeather(city: parisID) { (success, weather) in
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        getWeatherFrom()
+    }
+    
+    // MARK: - Variables
+    private let parisID = "6455259"
+    private let newYorkID = "5128638"
+    
+    // MARK: - Methods
+    // Get and display the current temp and the weather description icon
+    func getWeatherFrom() {
+        // Paris
+        WeatherService.shared.getWeather(city: parisID) { (success, weather) in
             DispatchQueue.main.async {
                 if success, let weather = weather {
                     let temp = (round(weather.main.temp)).removeZerosFromEnd()
                     self.parisDegreesLabel.text = temp + "°"
                     self.parisIconImage.image = self.getImage(for: weather.weather[0])
-                    print ("-------------> Paris: \(weather)")
                 } else {
-                    self.displayAlert("Le serveur n'a pas pu récuperer la météo, veuillez retenter d'ici quelques minutes")
+                    self.displayAlert("We could'nt get the current weather, please retry after few minutes.")
                 }
             }
         }
         
-        WeatherService.shared.getDailyWeather(city: newYorkID) { (success, weather) in
+        // New-York
+        WeatherService.shared.getWeather(city: newYorkID) { (success, weather) in
             DispatchQueue.main.async {
                 if success, let weather = weather {
                     let temp = (round(weather.main.temp)).removeZerosFromEnd()
                     self.newYorkDegreesLabel.text = temp + "°"
                     self.newYorkIconImage.image = self.getImage(for: weather.weather[0])
-                    print ("-------------> New-York: \(weather)")
                 } else {
-                    self.displayAlert("Le serveur n'a pas pu récuperer la météo, veuillez retenter d'ici quelques minutes")
+                    self.displayAlert("We could'nt get the current weather, please retry after few minutes.")
                 }
             }
         }
     }
     
+    // Put rounded corner to the grey view
     private func setupRectView() {
         for rect in rectView {
             let width = rect.bounds.width
@@ -74,8 +72,8 @@ class WeatherViewController: UIViewController {
         }
     }
     
+    // Get a weather icon for each weather type
     private func getImage(for weatherElement: WeatherElement) -> UIImage {
-        
         if let main = weatherElement.main {
             
             if main.contains("Clouds") {

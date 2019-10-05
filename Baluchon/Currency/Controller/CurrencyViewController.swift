@@ -10,19 +10,17 @@ import UIKit
 
 class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    // MARK: Outlets
+    // MARK: - Outlets
     @IBOutlet weak var currencyToConvertTextField: UITextField!
     @IBOutlet weak var currencyConvertedTextField: UITextField!
     @IBOutlet weak var dollarView: UIView!
     @IBOutlet weak var whiteView: UIView!
     @IBOutlet weak var greyView: UIView!
-    
     @IBOutlet weak var currencyStackView: UIStackView!
     @IBOutlet weak var greyViewTopConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var stackViewTopConstraint: NSLayoutConstraint!
-    // MARK: ViewCycle
-
+    
+    // MARK: - ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupRoundedView()
@@ -40,21 +38,14 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
         // Manage Keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        self.stackViewTopConstraintCache = self.stackViewTopConstraint
-        if let stackViewTopConstraintCache = self.stackViewTopConstraintCache  {
-            self.currencyStackView.removeConstraint(stackViewTopConstraintCache)
-        }
     }
     
-    // MARK: Variables
-    private var stackViewTopConstraintCache: NSLayoutConstraint? = nil
-    
-    // MARK: Actions
+    // MARK: - Actions
     @IBAction func dismissKeyboard(_ sender: Any) {
         currencyToConvertTextField.resignFirstResponder()
     }
-
-    // MARK: Manage Keyboard
+    
+    // MARK: - Manage Keyboard
     @objc private func keyboardWillShow(notification: Notification) {
         guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {return}
         UIView.animate(withDuration: duration) {
@@ -69,12 +60,12 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
-    // MARK: Methods
-
+    // MARK: - Methods
+    // Method to get the daily USD currency and convert euros
     @objc func convert() {
         guard let toConvert = self.currencyToConvertTextField.text else {return}
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        CurrencyService.shared.getDailyCurrency(callback: ({ (success, currency) in
+        CurrencyService.shared.getCurrency(callback: ({ (success, currency) in
             DispatchQueue.main.async {
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             if success, let currency = currency {
@@ -86,19 +77,20 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
                     self.currencyConvertedTextField.text = resultWith2Decimals + " $"
                
             } else {
-                self.displayAlert("Nous n'avons pas pu obtenir le taux de change. Veuillez réitérer votre demande dans quelques minutes.")
-                print ("alert error currency")
+                self.displayAlert("We couldn't get the currency, please retry after few minutes.")
             }
             }
         }))
     }
     
+    // Make the button view circle
     func setupRoundedView() {
         let width = self.dollarView.bounds.width
         self.dollarView.layer.cornerRadius = width / 2
         self.dollarView.clipsToBounds = true
     }
     
+    // Put rounded corners to the textFields
     func setupTextField() {
         let textFieldArray = [currencyToConvertTextField, currencyConvertedTextField]
         currencyToConvertTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
@@ -112,6 +104,7 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    // WhiteView rounded corners
     func setupWhiteView() {
         let width = self.whiteView.frame.width
         self.whiteView.layer.cornerRadius = width/15
@@ -120,20 +113,12 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
 
 }
 
+// MARK: - TextField Delegate
 extension CurrencyViewController: UITextFieldDelegate {
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        print ("croix apuyée")
         currencyConvertedTextField.text = ""
         return true
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let str = NSString(string: textField.text ?? "").replacingCharacters(in: range, with: string)
-        guard !str.isEmpty else { return true }
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .none
-        return numberFormatter.number(from: str)?.intValue != nil
     }
     
     func didChange<Value>(_ changeKind: NSKeyValueChange, valuesAt indexes: IndexSet, for keyPath: __owned KeyPath<CurrencyViewController, Value>) {
