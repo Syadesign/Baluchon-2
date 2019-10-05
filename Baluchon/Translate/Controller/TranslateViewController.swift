@@ -87,6 +87,8 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    // MARK: - Actions
+    
     @IBAction func dismissKeybooard(_ sender: Any) {
         textToTranslate.resignFirstResponder()
     }
