@@ -123,13 +123,13 @@
 			path = Mock;
 			sourceTree = "<group>";
 		};
-		D8572F8F22FC0F2900B3A0BE /* Translate */ = {
+		D8572F8F22FC0F2900B3A0BE /* Translation */ = {
 			isa = PBXGroup;
 			children = (
 				D8572F9722FC0FD300B3A0BE /* Controller */,
 				D8572F9622FC0FC100B3A0BE /* Model */,
 			);
-			path = Translate;
+			path = Translation;
 			sourceTree = "<group>";
 		};
 		D8572F9022FC0F2900B3A0BE /* Weather */ = {
@@ -238,7 +238,7 @@
 			children = (
 				D8572F9122FC0F2900B3A0BE /* Currency */,
 				D8572F9222FC0F4A00B3A0BE /* Main */,
-				D8572F8F22FC0F2900B3A0BE /* Translate */,
+				D8572F8F22FC0F2900B3A0BE /* Translation */,
 				D8572F9022FC0F2900B3A0BE /* Weather */,
 				D8DF06C622DDB31900775355 /* AppDelegate.swift */,
 				D8DF06CF22DDB31A00775355 /* Assets.xcassets */,
