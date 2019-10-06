@@ -25,28 +25,15 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: - ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupRoundedView()
-        setupTextView()
-        setupWhiteView()
-        textToTranslate.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        self.setupRoundedView()
+        self.setupTextView()
+        self.setupWhiteView()
         
-        // Add gesture to the translate button
-        let translateGesture = UITapGestureRecognizer(target: self, action: #selector(translate))
-        self.translateButtonView.addGestureRecognizer(translateGesture)
-        translateGesture.delegate = self
-        translateGesture.isEnabled = true
+        // Gestures
+        self.addTranslateGesture()
+        self.addClearGesture()
         
-        // Add gesture to the clear button
-        let clearGesture = UITapGestureRecognizer(target: self, action: #selector(clearText))
-        self.clearButton.addGestureRecognizer(clearGesture)
-        clearGesture.delegate = self
-        clearGesture.isEnabled = true
-        clearButton.isHidden = true
-        // TextViewDelegate
-        self.textToTranslate.delegate = self
-        self.textTranslated.delegate = self
-        
-        // Manage Keyboard
+        // Keyboard notifications
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -95,7 +82,6 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     // MARK: - Actions
-    
     @IBAction func dismissKeybooard(_ sender: Any) {
         textToTranslate.resignFirstResponder()
     }
@@ -104,7 +90,7 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         if self.currentState == .fromFrench {
             self.currentState = .fromEnglish
         } else if self.currentState == .fromEnglish {
-           self.currentState = .fromFrench
+            self.currentState = .fromFrench
         }
     }
     
@@ -126,12 +112,29 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         }))
     }
     
+    /// Add gesture to the translate button
+    func addTranslateGesture() {
+        let translateGesture = UITapGestureRecognizer(target: self, action: #selector(translate))
+        self.translateButtonView.addGestureRecognizer(translateGesture)
+        translateGesture.delegate = self
+        translateGesture.isEnabled = true
+    }
+    
     @objc func translate() {
         if currentState == .fromFrench {
             translateFromLanguage(from: french, to: english)
         } else if currentState == .fromEnglish {
-           translateFromLanguage(from: english, to: french)
+            translateFromLanguage(from: english, to: french)
         }
+    }
+    
+    /// Add gesture to the clear button
+    func addClearGesture() {
+        let clearGesture = UITapGestureRecognizer(target: self, action: #selector(clearText))
+        self.clearButton.addGestureRecognizer(clearGesture)
+        clearGesture.delegate = self
+        clearGesture.isEnabled = true
+        clearButton.isHidden = true
     }
     
     @objc func clearText() {
@@ -141,9 +144,14 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         placeHolderToTranslate.isHidden = false
     }
     
-    // Put rounded corners to the textViews
+    /// Defind the textViews delegate and put rounded corners to the views
     func setupTextView() {
+        // delegate
+        self.textToTranslate.delegate = self
+        self.textTranslated.delegate = self
+        
         let textViewArray = [textTranslated, textToTranslate]
+        // Configure views
         let width = self.textToTranslate.bounds.width
         for txtView in textViewArray {
             txtView!.layer.cornerRadius = width / 20
@@ -154,14 +162,14 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    // WhiteView rounded corners
+    /// WhiteView rounded corners
     func setupWhiteView() {
         let width = self.whiteView.frame.width
         self.whiteView.layer.cornerRadius = width/15
         self.greyView.layer.cornerRadius = width/15
     }
     
-    // Make the button view circle
+    /// Make the button view circle
     func setupRoundedView() {
         let width = self.translateButtonView.bounds.width
         self.translateButtonView.layer.cornerRadius = width / 2

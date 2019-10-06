@@ -24,7 +24,7 @@ class CurrencyService {
     }
     
     // MARK: - Methods
-    // Get the current USD currency
+    /// Get the current USD currency
     func getCurrency(callback: @ escaping (Bool, Currency?) -> Void) {
         let request = createCurrencyRequest()
         task = session.dataTask(with: request) { (data, response, error) in
@@ -49,7 +49,7 @@ class CurrencyService {
         task?.resume()
     }
     
-    // Create an UrlRequest to get USD currency in a euros base
+    /// Create an UrlRequest to get USD currency in a euros base
     private func createCurrencyRequest() -> URLRequest {
         var component = URLComponents(url: currencyUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [

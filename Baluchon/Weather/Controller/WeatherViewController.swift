@@ -16,7 +16,6 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var parisIconImage: UIImageView!
     @IBOutlet var rectView: [UIView]!
     @IBOutlet weak var parisDegreesLabel: UILabel!
-    
     @IBOutlet weak var newYorkDegreesLabel: UILabel!
     
     // MARK: - ViewCycle
@@ -27,7 +26,7 @@ class WeatherViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        getWeatherFrom()
+        getWeather()
     }
     
     // MARK: - Variables
@@ -35,8 +34,8 @@ class WeatherViewController: UIViewController {
     private let newYorkID = "5128638"
     
     // MARK: - Methods
-    // Get and display the current temp and the weather description icon
-    func getWeatherFrom() {
+    /// Get and display the current temp and the weather description icon
+    func getWeather() {
         // Paris
         WeatherService.shared.getWeather(city: parisID) { (success, weather) in
             DispatchQueue.main.async {
@@ -64,7 +63,7 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    // Put rounded corner to the grey view
+    /// Put rounded corner to the grey view
     private func setupRectView() {
         for rect in rectView {
             let width = rect.bounds.width
@@ -72,7 +71,7 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    // Get a weather icon for each weather type
+    /// Get a weather icon for each weather type
     private func getImage(for weatherElement: WeatherElement) -> UIImage {
         if let main = weatherElement.main {
             

@@ -23,7 +23,7 @@ class TranslationService {
     }
     
     // MARK: - Methods
-    // Get the text translation
+    /// Get the text translation
     func getTranslation(text: String, from: String, to: String, callback: @ escaping (Bool, _ translatedText: String?) -> Void) {
 
         let request = createTranslationRequest(textToTranslate: text, from: from, to: to)
@@ -50,7 +50,7 @@ class TranslationService {
         task.resume()
     }
     
-    // Create an UrlRequest to get english translation from french language
+    /// Create an UrlRequest to get english translation from french language
     private func createTranslationRequest(textToTranslate: String, from: String, to: String) -> URLRequest {
         var component = URLComponents(url: translationUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [
