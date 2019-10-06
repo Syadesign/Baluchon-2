@@ -16,9 +16,9 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var dollarView: UIView!
     @IBOutlet weak var whiteView: UIView!
     @IBOutlet weak var greyView: UIView!
-    @IBOutlet weak var currencyStackView: UIStackView!
-    @IBOutlet weak var greyViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var stackViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var whiteViewTopConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var whiteViewBottomConstraint: NSLayoutConstraint!
     
     // MARK: - ViewCycle
     override func viewDidLoad() {
@@ -48,20 +48,26 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: - Manage Keyboard
     @objc private func keyboardWillShow(notification: Notification) {
         guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {return}
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
         UIView.animate(withDuration: duration) {
-            self.greyViewTopConstraint.constant = 0
+            self.whiteViewTopConstraint.constant = 0
+            self.whiteViewBottomConstraint.constant = keyboardHeight - 70
+        }
         }
     }
     
     @objc private func keyboardWillHide(notification: Notification) {
          guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {return}
-            UIView.animate(withDuration: duration) {
-                self.greyViewTopConstraint.constant = 200
+        UIView.animate(withDuration: duration) {
+            self.whiteViewTopConstraint.constant = 210
+            self.whiteViewBottomConstraint.constant = 0
         }
     }
 
     // MARK: - Methods
-    // Method to get the daily USD currency and convert euros
+    /// Method to get the daily USD currency and convert euros
     @objc func convert() {
         guard let toConvert = self.currencyToConvertTextField.text else {return}
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -83,14 +89,14 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
         }))
     }
     
-    // Make the button view circle
+    /// Make the button view circle
     func setupRoundedView() {
         let width = self.dollarView.bounds.width
         self.dollarView.layer.cornerRadius = width / 2
         self.dollarView.clipsToBounds = true
     }
     
-    // Put rounded corners to the textFields
+    /// Put rounded corners to the textFields
     func setupTextField() {
         let textFieldArray = [currencyToConvertTextField, currencyConvertedTextField]
         currencyToConvertTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
@@ -104,7 +110,7 @@ class CurrencyViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    // WhiteView rounded corners
+    /// WhiteView rounded corners
     func setupWhiteView() {
         let width = self.whiteView.frame.width
         self.whiteView.layer.cornerRadius = width/15

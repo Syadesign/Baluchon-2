@@ -13,13 +13,14 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: - Outlets
     @IBOutlet weak var placeHolderToTranslate: UILabel!
     @IBOutlet weak var placeHolderTranslated: UILabel!
-    @IBOutlet weak var greyViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var whiteViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var translateButtonView: UIView!
     @IBOutlet weak var textToTranslate: UITextView!
     @IBOutlet weak var textTranslated: UITextView!
     @IBOutlet weak var whiteView: UIView!
     @IBOutlet weak var greyView: UIView!
     @IBOutlet weak var clearButton: UIImageView!
+    @IBOutlet weak var whiteViewBottomConstraint: NSLayoutConstraint!
     
     // MARK: - ViewCycle
     override func viewDidLoad() {
@@ -75,15 +76,21 @@ class TranslateViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: - Manage Keyboard
     @objc private func keyboardWillShow(notification: Notification) {
         guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {return}
-        UIView.animate(withDuration: duration) {
-            self.greyViewTopConstraint.constant = 0
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            UIView.animate(withDuration: duration) {
+                self.whiteViewTopConstraint.constant = 0
+                self.whiteViewBottomConstraint.constant = keyboardHeight - 80
+            }
         }
     }
     
     @objc private func keyboardWillHide(notification: Notification) {
         guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {return}
         UIView.animate(withDuration: duration) {
-            self.greyViewTopConstraint.constant = 200
+            self.whiteViewTopConstraint.constant = 210
+            self.whiteViewBottomConstraint.constant = 0
         }
     }
     
