@@ -23,7 +23,7 @@ class WeatherService {
     }
     
     // MARK: - Methods
-    // Get the current weather
+    /// Get the current weather
     func getWeather(city: String, callback: @ escaping (Bool, Weather?) -> Void) {
        
         let request = createWeatherRequest(city: city)
@@ -50,7 +50,8 @@ class WeatherService {
         }
         task.resume()
     }
-    // Create a request to get the current weather in a city
+    
+    /// Create a request to get the current weather in a city
     private func createWeatherRequest(city: String) -> URLRequest {
         var component = URLComponents(url: weatherUrl, resolvingAgainstBaseURL: false)
         component?.queryItems = [
